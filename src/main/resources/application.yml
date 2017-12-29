@@ -1,0 +1,49 @@
+---
+
+security:
+  ignored: "/**"
+
+server:
+  address: 0.0.0.0
+  port: 8080
+  contextPath: "/"
+
+spring:
+  cache:
+    cache-names: coin
+    caffeine:
+      spec: maximumSize=500, expireAfterWrite=1d
+
+restTemplate:
+  config:
+    maxTotalConnections: 1000
+    maxPerRoute: 500
+    connectionTimeout: 5000
+    readTimeout: 5000
+  proxy:
+    enable: true
+    host: 168.219.61.252
+    port: 8080
+
+
+
+elasticsearch:
+  version: 5.6.5
+
+es:
+  cluster:
+    name: jiho
+  ssl: false
+  hosts: 10.253.237.11
+  transportPort: 9300
+
+partner:
+  apilayer:
+    domain: http://www.apilayer.net
+    key: 738509aab5bbb0a89c30797638d04928
+  bithumb:
+    domain: https://api.bithumb.com
+
+
+
+---

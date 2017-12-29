@@ -1,0 +1,40 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
+    }
+}
+
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+	testCompile ('org.springframework.boot:spring-boot-starter-test')
+	compile("org.springframework.boot:spring-boot-starter")
+	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-cache")
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+    
+    // https://mvnrepository.com/artifact/org.elasticsearch.client/transport
+	compile group: 'org.elasticsearch', name: 'elasticsearch', version: '5.6.5'
+    // https://mvnrepository.com/artifact/org.elasticsearch.client/transport
+	compile group: 'org.elasticsearch.client', name: 'transport', version: '5.6.5'
+	
+	// https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
+	compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.0'
+    
+}
+
