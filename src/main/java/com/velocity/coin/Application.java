@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+
 @ComponentScan(value="com.velocity.coin")
 @SpringBootApplication
 @EnableCaching
@@ -14,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class Application {
 
 	public static void main(String[] args){
-		System.out.println("test");
+		System.out.println("main");
 		SpringApplication.run(Application.class, args);
 	}
 	

@@ -2,10 +2,7 @@ package com.velocity.coin.exchange;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +20,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.velocity.coin.constant.RepoConstants;
 import com.velocity.coin.exchange.model.HistoricalRespVO;
 import com.velocity.coin.repository.es.EsRepository;
+
+import javax.annotation.PostConstruct;
 
 @Service
 @CacheConfig(cacheNames = {"coin"})
@@ -43,11 +42,18 @@ public class CurrencyExchangeService {
 	@Autowired
 	private EsRepository esRepository;
 
-	private static final DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+	private DateFormat df;
 
 	@Cacheable
 	public Double getExchageRate(Currency from, Currency to){
 		return getExchageRate(from, to, true);
+	}
+
+
+	@PostConstruct
+	public void init(){
+		df = new SimpleDateFormat("YYYY-MM-dd");
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 	
 	@Cacheable

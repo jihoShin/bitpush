@@ -16,10 +16,10 @@ import com.velocity.coin.ExculdeFromTest;
 @EnableScheduling
 public class ApplictionTest {
 
-	public static void main(String[] args){
-		System.out.println("test");
-		SpringApplication.run(Application.class, args);
-	}
+//	public static void main(String[] args){
+//		System.out.println("test");
+//		SpringApplication.run(Application.class, args);
+//	}
 	
 }
 

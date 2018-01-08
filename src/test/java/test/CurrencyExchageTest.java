@@ -21,8 +21,6 @@ public class CurrencyExchageTest {
 	
 	@Test
 	public void test(){
-		
-		
 		Double result = currencyExchangeService.getExchageRate(Currency.getInstance("USD"), Currency.getInstance("KRW"));
 		System.out.println("result : "+result);
 

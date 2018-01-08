@@ -32,9 +32,9 @@ elasticsearch:
 
 es:
   cluster:
-    name: JIHO
+    name: elasticsearch
   ssl: false
-  hosts: localhost
+  hosts: 127.0.0.1
   transportPort: 9300
 
 partner:

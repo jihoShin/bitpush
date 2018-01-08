@@ -10,8 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class RestConfig {
@@ -44,17 +51,11 @@ public class RestConfig {
 
 		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder(){
 			public <T extends RestTemplate> T configure(T restTemplate) {
-				HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-				clientHttpRequestFactory.setConnectTimeout(connectionTimeout);
-				clientHttpRequestFactory.setReadTimeout(readTimeout);
-				clientHttpRequestFactory.setHttpClient(httpClient());
-				
-				restTemplate.setRequestFactory(clientHttpRequestFactory);
-
+				restTemplate.setRequestFactory(getRequestFactory());
+				restTemplate.setMessageConverters(getHttpMessageConverter());
 				return restTemplate;
 			};
 		};
-
 		return restTemplateBuilder.build();
 	}
 	
@@ -82,9 +83,23 @@ public class RestConfig {
 		}
 		
 		return requestConfig.build();
-		
-		
 	}
-	
+
+	private HttpComponentsClientHttpRequestFactory getRequestFactory(){
+		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+		clientHttpRequestFactory.setConnectTimeout(connectionTimeout);
+		clientHttpRequestFactory.setReadTimeout(readTimeout);
+		clientHttpRequestFactory.setHttpClient(httpClient());
+		return clientHttpRequestFactory;
+	}
+
+	private List<HttpMessageConverter<?>> getHttpMessageConverter(){
+		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Arrays.asList(new MediaType[]{MediaType.ALL}));
+		messageConverters.add(converter);
+		return messageConverters;
+	}
+
 	
 }

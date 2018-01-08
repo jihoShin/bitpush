@@ -3,16 +3,22 @@ package com.velocity.coin.config;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import com.velocity.coin.market.poloniex.service.PoloniexService;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class EsConfig {
+
+	private static Logger logger = LoggerFactory.getLogger(EsConfig.class);
+
 
 	@Value("${es.cluster.name}")
 	private String clusterName;
@@ -22,15 +28,14 @@ public class EsConfig {
 
 	@Value("${es.transportPort:9300}")
 	private int transportPort;
-	
+
 
 	@Bean
 	TransportClient transportClient() throws UnknownHostException {
-		
-		
-		System.out.println("clustername  : "+clusterName);
-		System.out.println("hosts        : "+hosts);
-		System.out.println("transportPort: "+transportPort);
+
+		logger.info("clustername  : "+clusterName);
+		logger.info("hosts        : "+hosts);
+		logger.info("transportPort: "+transportPort);
 		
 		Settings settings = Settings.builder()
 				.put("cluster.name", clusterName)
@@ -39,7 +44,7 @@ public class EsConfig {
 		
 		PreBuiltTransportClient client = new PreBuiltTransportClient(settings);
 		for(String host: hosts.split(",")) {
-			System.out.println("host : " + host);
+			logger.info("host : " + host);
 			client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host), transportPort));
 		}
 		return client;

@@ -18,6 +18,7 @@ import com.velocity.coin.model.Coin;
 import com.velocity.coin.model.Market;
 import com.velocity.coin.repository.es.EsRepository;
 import com.velocity.coin.service.DiffPriceService;
+import org.springframework.util.StringUtils;
 
 @ExculdeFromTest
 @Component
@@ -43,6 +44,15 @@ public class BithumbScheduler {
 			logger.info("coin : "+coin);
 			
 			BithumbRespVO respVO  = bithumbService.ticker(coin);
+
+			if(respVO == null){
+				continue;
+			}
+			if(org.apache.commons.codec.binary.StringUtils.equals("5600", respVO.status)){
+				logger.info("The bithumb server is undergoing inspection.");
+				continue;
+			}
+
 			BithumbTicker ticker = new BithumbTicker(coin, 
 					respVO.data.date,
 					respVO.data.opening_price,
