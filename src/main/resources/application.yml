@@ -21,7 +21,7 @@ restTemplate:
     connectionTimeout: 5000
     readTimeout: 5000
   proxy:
-    enable: true
+    enable: false
     host: 168.219.61.252
     port: 8080
 
@@ -32,9 +32,9 @@ elasticsearch:
 
 es:
   cluster:
-    name: jiho
+    name: JIHO
   ssl: false
-  hosts: 10.253.237.11
+  hosts: localhost
   transportPort: 9300
 
 partner:
@@ -43,7 +43,8 @@ partner:
     key: 738509aab5bbb0a89c30797638d04928
   bithumb:
     domain: https://api.bithumb.com
-
+  poloniex:
+    domain: https://poloniex.com
 
 
 ---
