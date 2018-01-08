@@ -1,4 +1,4 @@
-package bitpush;
+package test;
 
 import java.util.Currency;
 import java.util.Date;
@@ -9,22 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.velocity.coin.Application;
 import com.velocity.coin.exchange.CurrencyExchangeService;
 import com.velocity.coin.exchange.model.HistoricalRespVO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest (classes = Application.class)
-public class Test1 {
+@SpringBootTest (classes = ApplictionTest.class)
+public class CurrencyExchageTest {
 
 	@Autowired
 	CurrencyExchangeService currencyExchangeService;
-
+	
+	@Test
 	public void test(){
-
-		for(Currency c : Currency.getAvailableCurrencies()){
-			System.out.println(c.toString());
-		}
+		
+		
+		Double result = currencyExchangeService.getExchageRate(Currency.getInstance("USD"), Currency.getInstance("KRW"));
+		System.out.println("result : "+result);
 
 	}
 
@@ -34,7 +34,7 @@ public class Test1 {
 		System.out.println("historicalRespVO : "+historicalRespVO);
 	}
 
-	@Test
+
 	public void test3(){
 		Double result;
 		System.out.println("test3");
@@ -47,8 +47,8 @@ public class Test1 {
 				e.printStackTrace();
 			}
 
-			result = currencyExchangeService.getExchageRateForUSD("KRW");
-			System.out.println("result : "+result);
+//			result = currencyExchangeService.getExchageRateForUSD("KRW");
+//			System.out.println("result : "+result);
 		}
 
 	}

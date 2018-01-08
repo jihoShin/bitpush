@@ -1,5 +1,7 @@
 package com.velocity.coin.market.bithumb.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,15 +16,19 @@ import com.velocity.coin.model.Coin;
 @Service
 public class BithumbService {
 
+	private static Logger logger = LoggerFactory.getLogger(BithumbService.class);
+	
 	@Value("${partner.bithumb.domain}")
 	private String domain;
 	
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	public BithumbRespVO ticker(Coin symbol){
+	public BithumbRespVO ticker(Coin coin){
 		
-		String url = domain + "/public/ticker/"+symbol;
+		logger.debug("ticker : "+coin);
+		
+		String url = domain + "/public/ticker/"+coin;
 		
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);

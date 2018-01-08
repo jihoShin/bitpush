@@ -9,9 +9,10 @@ import com.velocity.coin.model.Market;
 
 public class BithumbTicker extends BasicTicker{
 	
-	private static Currency CURRENCY = Currency.getInstance("KRW");
 
-	private static Market MARKET = Market.Bithumb;
+	private final static Market MARKET = Market.Bithumb;
+
+	private final static Currency CURRENCY = Currency.getInstance("KRW");
 	
 	public BithumbTicker(Coin symbol, Date date, Integer opening_price,
 			Integer closing_price, Integer min_price, Integer max_price, Double average_price, Double units_traded,

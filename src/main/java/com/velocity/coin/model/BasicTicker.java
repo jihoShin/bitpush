@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.velocity.coin.market.bithumb.model.BithumbTicker;
-
 public abstract class BasicTicker {
 
 	public Market market;
@@ -24,13 +22,15 @@ public abstract class BasicTicker {
 		super();
 		this.market = market;
 		this.symbol = symbol;
+		this.currency = currency;
 		this.price = price;
 		this.date = date;
 	}
 
 	public Map<String, ?> toMap(){
 		Map<String, Object> map = new HashMap<>();
-		for(Field field : BithumbTicker.class.getFields()){
+		
+		for(Field field : this.getClass().getFields()){
 			String key = field.getName();
 			Object value = null;
 			try {

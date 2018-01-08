@@ -2,18 +2,18 @@ package com.velocity.coin.market.bithumb.model;
 
 import java.util.Date;
 
-public class Data { 
+public class BithumbData { 
 
-	public int opening_price;
-	public int closing_price;
-	public int min_price;
-	public int max_price;
-	public double average_price;
-	public double units_traded;
-	public double volume_1day;
-	public double volume_7day;
-	public int buy_price;
-	public int sell_price;
+	public Integer opening_price;
+	public Integer closing_price;
+	public Integer min_price;
+	public Integer max_price;
+	public Double average_price;
+	public Double units_traded;
+	public Double volume_1day;
+	public Double volume_7day;
+	public Integer buy_price;
+	public Integer sell_price;
 	public Date date;
 	
 	

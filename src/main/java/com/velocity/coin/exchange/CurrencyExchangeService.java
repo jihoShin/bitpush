@@ -4,8 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
-
-import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,71 +20,91 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.velocity.coin.constant.RepoConstants;
 import com.velocity.coin.exchange.model.HistoricalRespVO;
+import com.velocity.coin.repository.es.EsRepository;
 
 @Service
 @CacheConfig(cacheNames = {"coin"})
 public class CurrencyExchangeService {
-	
-	public static Logger logger = LoggerFactory.getLogger(CurrencyExchangeService.class);
+
+	private static Logger logger = LoggerFactory.getLogger(CurrencyExchangeService.class);
+
 	
 	@Value("${partner.apilayer.domain}")
 	private String domain;
-	
+
 	@Value("${partner.apilayer.key}")
 	private String key;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
 
-	private String historicalUrl;
-	
+	@Autowired
+	private EsRepository esRepository;
+
 	private static final DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
 
-	private static final String USDKRW = "USDKRW";
-	
-	@PostConstruct
-	void init(){
-		historicalUrl =  domain + "/api/historical";
+	@Cacheable
+	public Double getExchageRate(Currency from, Currency to){
+		return getExchageRate(from, to, true);
 	}
 	
 	@Cacheable
-	public Double getExchageRateForUSD(String toCurrency){
+	public Double getExchageRate(Currency from, Currency to, boolean isStoreInDB){
 		logger.info("## getExchageRateForUSD");
-		logger.info("toCurrency : "+toCurrency);
-		
-		Currency currency= Currency.getInstance(toCurrency);
-		HistoricalRespVO respVO= historical(currency, new Date());
-		
-		if(respVO.quotes != null && respVO.quotes.containsKey(USDKRW)){
-			return respVO.quotes.get(USDKRW);
+		logger.info("from : "+from);
+		logger.info("to   : "+to);
+
+		HistoricalRespVO respVO= historical(to, new Date());
+		String key = getKey(from, to);
+		if(respVO.quotes != null && respVO.quotes.containsKey(key)){
+			Double exchageRate = respVO.quotes.get(key);
+			if(isStoreInDB){
+				Map<String, Object> map = new HashMap<>();
+				map.put(RepoConstants.FieldName.DATE, new Date());
+				map.put(RepoConstants.FieldName.EXCHANGE_RATE+"_"+from+"_"+to, exchageRate);
+				
+				esRepository.set(RepoConstants.IndexName.THIRD_PARTY, RepoConstants.Type.EXCHANGE, map);
+			}
+			return exchageRate;
 		}
 		return null;
 	}
-	
-	
+
 	public HistoricalRespVO historical(Currency currency, Date date){
-		
+
 		logger.info("## historical");
 		logger.info("currency : "+currency);
 		logger.info("date : "+date);
-		
+
+		String url = domain + "/api/historical";
 		String dateStr = df.format(date);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(historicalUrl)
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("access_key", key)
 				.queryParam("date", dateStr)
 				.queryParam("currencies", currency)
 				.queryParam("format", 1);
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-	
+
 		HistoricalRespVO resp = restTemplate.exchange(builder.build().toUri(), HttpMethod.GET, requestEntity, HistoricalRespVO.class).getBody();
+
+		logger.debug(resp.toString());
 		return resp;
 	}
-	
-	
-	
+
+	private String getKey(Currency from, Currency to){
+		if(from == null || to == null){
+			return null;
+		}
+
+		return from.getCurrencyCode() + to.getCurrencyCode();
+	}
+
+
+
 
 }

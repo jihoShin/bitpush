@@ -4,7 +4,7 @@ public class BithumbRespVO {
 
 	public String status;
 	
-	public Data data;
+	public BithumbData data;
 
 	@Override
 	public String toString() {
