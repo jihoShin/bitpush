@@ -38,10 +38,10 @@ public class PoloniexScheduler {
 	private EsRepository esRepository;
 	
 	@Autowired
-	private DiffPriceService diffPriceService; 
-	
-	private static Coin[] coins = {Coin.BTC, Coin.ETH, Coin.XRP};
-	
+	private DiffPriceService diffPriceService;
+
+	private static Coin[] coins = {Coin.BTC, Coin.ETH, Coin.XRP, Coin.BCH, Coin.DASH, Coin.LTC};
+
 	@Scheduled(fixedDelay=1000*5)
 	public void updateCoin() throws JsonProcessingException{
 		
@@ -50,29 +50,30 @@ public class PoloniexScheduler {
 		HashMap<String, PoloniexData> resp  = poloniexService.ticker();
 		
 		for(Coin coin : coins){
-			logger.info("coin : "+coin);
-			PoloniexData data = resp.get("USDT_"+coin);
-			
-			PoloniexTicker ticker = new PoloniexTicker(coin, 
-					new Date(),
-					data.id, 
-					data.last, 
-					data.lowestAsk, 
-					data.highestBid, 
-					data.percentChange, 
-					data.quoteVolume, 
-					data.baseVolume, 
-					data.high24hr, 
-					data.low24hr, 
-					data.isFrozen);		
-			
-			esRepository.set(RepoConstants.IndexName.DEFAULT, Market.Poloniex, ticker.toMap());
-			diffPriceService.update(coin, Market.Poloniex, Currency.getInstance("USD"), data.last);
-			
+			try {
+				logger.info("coin : "+coin);
+				PoloniexData data = resp.get("USDT_"+coin);
+
+				PoloniexTicker ticker = new PoloniexTicker(coin,
+						new Date(),
+						data.id,
+						data.last,
+						data.lowestAsk,
+						data.highestBid,
+						data.percentChange,
+						data.quoteVolume,
+						data.baseVolume,
+						data.high24hr,
+						data.low24hr,
+						data.isFrozen);
+
+				esRepository.set(RepoConstants.IndexName.DEFAULT, RepoConstants.Type.TICKER, ticker.toMap());
+				diffPriceService.update(coin, Market.Poloniex, Currency.getInstance("USD"), data.last);
+
+			}catch (Exception e){
+				logger.error("updateCoin error : "+coin, e);
+			}
 		}
-		
-	
-		
 	}
 	
 }

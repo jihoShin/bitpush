@@ -40,8 +40,6 @@ public class BithumbService {
 		
 		String url = domain + "/public/ticker/"+coin;
 
-
-
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 	

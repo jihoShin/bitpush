@@ -52,6 +52,8 @@ public class DiffPriceService {
 		if(DEFAULT_CURRENCY != currency){
 			double exchangeRate = currencyExchangeService.getExchageRate(currency, DEFAULT_CURRENCY);
 			amountStandard = amount*exchangeRate;
+			logger.debug(exchangeRate+" * "+amount+" = "+amountStandard);
+
 		}else{
 			amountStandard = amount;
 		}
@@ -81,19 +83,21 @@ public class DiffPriceService {
 				for(int j=i+1 ; j<keys.size() && i<keys.size()-1 ; j++){
 					String key2 = keys.get(j);
 					Price price2 = mapByMarkentBin.get(key2);
-					double diffPercentage = calculPriceDiffPercentage(price1.amountStandard, price2.amountStandard);
-					priceInfo.put(RepoConstants.FieldName.PRICE_DIFF_PREFIX+key1+"_"+key2, diffPercentage);
+
+					double diffBasedOnPrice1 = calculPriceDiffPercentage(price1.amountStandard, price2.amountStandard);
+					double diffBasedOnPrice2 = calculPriceDiffPercentage(price2.amountStandard, price1.amountStandard);
+
+					priceInfo.put(RepoConstants.FieldName.PRICE_DIFF_PREFIX+"_"+key2+"_basedOn_"+key1, diffBasedOnPrice1);
+					priceInfo.put(RepoConstants.FieldName.PRICE_DIFF_PREFIX+"_"+key1+"_basedOn_"+key2, diffBasedOnPrice2);
 				}
 			}
 			
 			esRepository.set(RepoConstants.IndexName.PRICE, RepoConstants.Type.DIFF, priceInfo);
 		}
 	}
-	
-	
-	
-	private double calculPriceDiffPercentage(double a, double b){
-		return (a-b)/a*100;
+
+	private double calculPriceDiffPercentage(double reference, double measurement ){
+		return (measurement-reference)/reference*100;
 	}
 	
 	

@@ -4,7 +4,13 @@ public enum Coin {
 	
 	BTC("Bitcoin"),
 	ETH("Ethereum"),
-	XRP("Ripple"),;
+	XRP("Ripple"),
+	BCH("BitcoinCash"),
+	LTC("LiteCoin"),
+	DASH("Dash"),
+	QTUM("Quantum")
+
+	;
 	
 	public String coinName;
 	

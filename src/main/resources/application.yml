@@ -8,6 +8,10 @@ server:
   port: 8080
   contextPath: "/"
 
+logging:
+  level:
+    com.velocity.coin: DEBUG
+
 spring:
   cache:
     cache-names: coin

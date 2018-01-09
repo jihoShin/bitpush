@@ -35,43 +35,44 @@ public class BithumbScheduler {
 	@Autowired
 	private DiffPriceService diffPriceService; 
 
-	private static Coin[] coins = {Coin.BTC, Coin.ETH, Coin.XRP};
+	private static Coin[] coins = {Coin.BTC, Coin.ETH, Coin.XRP, Coin.BCH, Coin.DASH, Coin.LTC, Coin.QTUM};
 
 	@Scheduled(fixedDelay=1000*5)
-	public void updateCoin() throws JsonProcessingException{
+	public void updateCoin() throws JsonProcessingException {
 		logger.info("updateCoin");
 		for(Coin coin : coins){
-			logger.info("coin : "+coin);
-			
-			BithumbRespVO respVO  = bithumbService.ticker(coin);
+			try {
+				logger.info("coin : "+coin);
 
-			if(respVO == null){
-				continue;
+				BithumbRespVO respVO  = bithumbService.ticker(coin);
+				if(respVO == null){
+					continue;
+				}
+				if(org.apache.commons.codec.binary.StringUtils.equals("5600", respVO.status)){
+					logger.error("The bithumb server is undergoing inspection.");
+					continue;
+				}
+
+				BithumbTicker ticker = new BithumbTicker(coin,
+						respVO.data.date,
+						respVO.data.opening_price,
+						respVO.data.closing_price,
+						respVO.data.min_price,
+						respVO.data.max_price,
+						respVO.data.average_price,
+						respVO.data.units_traded,
+						respVO.data.volume_1day,
+						respVO.data.volume_7day,
+						respVO.data.buy_price,
+						respVO.data.sell_price
+				);
+
+				esRepository.set(RepoConstants.IndexName.DEFAULT, RepoConstants.Type.TICKER, ticker.toMap());
+				diffPriceService.update(coin, Market.Bithumb, Currency.getInstance("KRW"), respVO.data.closing_price.doubleValue());
+
+			}catch (Exception e){
+				logger.error("updateCoin error : "+coin, e);
 			}
-			if(org.apache.commons.codec.binary.StringUtils.equals("5600", respVO.status)){
-				logger.info("The bithumb server is undergoing inspection.");
-				continue;
-			}
-
-			BithumbTicker ticker = new BithumbTicker(coin, 
-					respVO.data.date,
-					respVO.data.opening_price,
-					respVO.data.closing_price,
-					respVO.data.min_price,
-					respVO.data.max_price,
-					respVO.data.average_price,
-					respVO.data.units_traded,
-					respVO.data.volume_1day,
-					respVO.data.volume_7day,
-					respVO.data.buy_price, 
-					respVO.data.sell_price
-					);
-
-			esRepository.set(RepoConstants.IndexName.DEFAULT, Market.Bithumb, ticker.toMap());
-			diffPriceService.update(coin, Market.Bithumb, Currency.getInstance("KRW"), respVO.data.closing_price.doubleValue());
-
 		}
-
 	}
-
 }

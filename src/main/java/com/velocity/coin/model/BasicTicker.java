@@ -10,7 +10,7 @@ public abstract class BasicTicker {
 
 	public Market market;
 
-	public Coin symbol;
+	public Coin coin;
 	
 	public Currency currency;
 	
@@ -18,10 +18,10 @@ public abstract class BasicTicker {
 	
 	public Date date;
 	
-	public BasicTicker(Market market, Coin symbol, Currency currency, Double price, Date date) {
+	public BasicTicker(Market market, Coin coin, Currency currency, Double price, Date date) {
 		super();
 		this.market = market;
-		this.symbol = symbol;
+		this.coin = coin;
 		this.currency = currency;
 		this.price = price;
 		this.date = date;

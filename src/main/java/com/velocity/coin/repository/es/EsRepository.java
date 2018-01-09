@@ -14,12 +14,8 @@ public class EsRepository {
 	
 	@Autowired
 	private TransportClient client;
-	
-	public IndexResponse set(String index, Market type, Map<String, ?> map){
-		IndexResponse response = client.prepareIndex(index, type.name()).setSource(map).get();
-		return response;
-	}
-	
+
+
 	public IndexResponse set(String index, String type, Map<String, ?> map){
 		IndexResponse response = client.prepareIndex(index, type).setSource(map).get();
 		return response;
