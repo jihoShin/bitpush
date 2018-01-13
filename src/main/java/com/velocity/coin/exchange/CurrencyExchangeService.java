@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.velocity.coin.repository.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.velocity.coin.constant.RepoConstants;
 import com.velocity.coin.exchange.model.HistoricalRespVO;
-import com.velocity.coin.repository.es.EsRepository;
+import com.velocity.coin.repository.EsRepository;
 
 import javax.annotation.PostConstruct;
 
@@ -40,7 +41,7 @@ public class CurrencyExchangeService {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private EsRepository esRepository;
+	private IRepository repository;
 
 	private DateFormat df;
 
@@ -71,7 +72,7 @@ public class CurrencyExchangeService {
 				map.put(RepoConstants.FieldName.DATE, new Date());
 				map.put(RepoConstants.FieldName.EXCHANGE_RATE+"_"+from+"_"+to, exchageRate);
 				
-				esRepository.set(RepoConstants.IndexName.THIRD_PARTY, RepoConstants.Type.EXCHANGE, map);
+				repository.set(RepoConstants.IndexName.THIRD_PARTY, RepoConstants.Type.EXCHANGE, map);
 			}
 			return exchageRate;
 		}

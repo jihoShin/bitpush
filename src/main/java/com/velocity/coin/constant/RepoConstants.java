@@ -2,7 +2,11 @@ package com.velocity.coin.constant;
 
 	
 public class RepoConstants {
-	
+
+	public class Repository{
+		final static public String ELASTICSEARCH = "elasticsearch";
+		final static public String TEST = "test";
+	}
 	
 	public class IndexName{
 		final static public String DEFAULT = "bitpush";

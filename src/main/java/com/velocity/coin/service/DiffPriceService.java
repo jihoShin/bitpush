@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.velocity.coin.repository.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import com.velocity.coin.constant.RepoConstants;
 import com.velocity.coin.exchange.CurrencyExchangeService;
 import com.velocity.coin.model.Coin;
 import com.velocity.coin.model.Market;
-import com.velocity.coin.repository.es.EsRepository;
+import com.velocity.coin.repository.EsRepository;
 
 @Service
 public class DiffPriceService {
@@ -29,7 +30,7 @@ public class DiffPriceService {
 	private CurrencyExchangeService currencyExchangeService;
 	
 	@Autowired
-	private EsRepository esRepository;
+	private IRepository repository;
 	
  	
 	final static private Currency DEFAULT_CURRENCY = Currency.getInstance("KRW");
@@ -91,8 +92,8 @@ public class DiffPriceService {
 					priceInfo.put(RepoConstants.FieldName.PRICE_DIFF_PREFIX+"_"+key1+"_basedOn_"+key2, diffBasedOnPrice2);
 				}
 			}
-			
-			esRepository.set(RepoConstants.IndexName.PRICE, RepoConstants.Type.DIFF, priceInfo);
+
+			repository.set(RepoConstants.IndexName.PRICE, RepoConstants.Type.DIFF, priceInfo);
 		}
 	}
 

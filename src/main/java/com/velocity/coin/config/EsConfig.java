@@ -14,11 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class EsConfig {
 
 	private static Logger logger = LoggerFactory.getLogger(EsConfig.class);
-
 
 	@Value("${es.cluster.name}")
 	private String clusterName;

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,6 @@ public class BinanceService {
 
     @Autowired
     private RestTemplate restTemplate;
-
-
 
     public Map<String, BinanceData> ticker(){
         logger.debug("ticker");
@@ -53,9 +52,10 @@ public class BinanceService {
         Map result = list.stream()
                 .collect(
                         Collectors.toMap(
-                                a->a.symbol, a->this, // key = name, value = websites
-                                (oldValue, newValue) -> oldValue,       // if same key, take the old key
-                                LinkedHashMap::new                      // returns a LinkedHashMap, keep order
+                                a->a.symbol,
+                                a->a,
+                                (oldValue, newValue) -> oldValue,
+                                HashMap::new
                         ));
         return result;
     }

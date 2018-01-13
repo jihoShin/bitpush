@@ -6,13 +6,11 @@ import com.velocity.coin.constant.RepoConstants;
 import com.velocity.coin.market.binance.model.BinanceData;
 import com.velocity.coin.market.binance.model.BinanceTicker;
 import com.velocity.coin.market.binance.service.BinanceService;
-import com.velocity.coin.market.bithumb.model.BithumbRespVO;
-import com.velocity.coin.market.bithumb.model.BithumbTicker;
-import com.velocity.coin.market.bithumb.scheduler.BithumbScheduler;
 import com.velocity.coin.market.bithumb.service.BithumbService;
 import com.velocity.coin.model.Coin;
 import com.velocity.coin.model.Market;
-import com.velocity.coin.repository.es.EsRepository;
+import com.velocity.coin.repository.EsRepository;
+import com.velocity.coin.repository.IRepository;
 import com.velocity.coin.service.DiffPriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Currency;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,7 +38,7 @@ public class BinanceScheduler {
     private BithumbService bithumbService;
 
     @Autowired
-    private EsRepository esRepository;
+    private IRepository repository;
 
     @Autowired
     private DiffPriceService diffPriceService;
@@ -66,7 +63,7 @@ public class BinanceScheduler {
                 if(binanceData != null){
                     double priceUSD = binanceData.price * btcusdtPrice;
                     BinanceTicker ticker = new BinanceTicker(coin, priceUSD, new Date());
-                    esRepository.set(RepoConstants.IndexName.DEFAULT, RepoConstants.Type.TICKER, ticker.toMap());
+                    repository.set(RepoConstants.IndexName.DEFAULT, RepoConstants.Type.TICKER, ticker.toMap());
                     diffPriceService.update(coin, Market.Bithumb, Currency.getInstance("KRW"), priceUSD);
                 }
             }catch (Exception e){

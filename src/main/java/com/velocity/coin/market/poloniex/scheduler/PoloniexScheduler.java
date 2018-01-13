@@ -4,6 +4,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.velocity.coin.repository.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import com.velocity.coin.market.poloniex.model.PoloniexTicker;
 import com.velocity.coin.market.poloniex.service.PoloniexService;
 import com.velocity.coin.model.Coin;
 import com.velocity.coin.model.Market;
-import com.velocity.coin.repository.es.EsRepository;
+import com.velocity.coin.repository.EsRepository;
 import com.velocity.coin.service.DiffPriceService;
 
 
@@ -35,7 +36,7 @@ public class PoloniexScheduler {
 	private PoloniexService poloniexService;
 	
 	@Autowired
-	private EsRepository esRepository;
+	private IRepository repository;
 	
 	@Autowired
 	private DiffPriceService diffPriceService;
@@ -67,7 +68,7 @@ public class PoloniexScheduler {
 						data.low24hr,
 						data.isFrozen);
 
-				esRepository.set(RepoConstants.IndexName.DEFAULT, RepoConstants.Type.TICKER, ticker.toMap());
+				repository.set(RepoConstants.IndexName.DEFAULT, RepoConstants.Type.TICKER, ticker.toMap());
 				diffPriceService.update(coin, Market.Poloniex, Currency.getInstance("USD"), data.last);
 
 			}catch (Exception e){
