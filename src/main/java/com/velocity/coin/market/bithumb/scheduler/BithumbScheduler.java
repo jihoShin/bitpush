@@ -35,7 +35,7 @@ public class BithumbScheduler {
 	@Autowired
 	private DiffPriceService diffPriceService; 
 
-	private static Coin[] coins = {Coin.BTC, Coin.ETH, Coin.XRP, Coin.BCH, Coin.DASH, Coin.LTC, Coin.QTUM};
+	private static Coin[] coins = {Coin.BTC, Coin.ETH, Coin.XRP, Coin.BCH, Coin.DASH, Coin.LTC, Coin.QTUM, Coin.EOS};
 
 	@Scheduled(fixedDelay=1000*5)
 	public void updateCoin() throws JsonProcessingException {

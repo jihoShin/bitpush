@@ -49,6 +49,8 @@ partner:
     domain: https://api.bithumb.com
   poloniex:
     domain: https://poloniex.com
+  binance:
+    domain: https://api.binance.com
 
 
 ---

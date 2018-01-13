@@ -8,7 +8,8 @@ public enum Coin {
 	BCH("BitcoinCash"),
 	LTC("LiteCoin"),
 	DASH("Dash"),
-	QTUM("Quantum")
+	QTUM("Quantum"),
+	EOS("EOS")
 
 	;
 	
